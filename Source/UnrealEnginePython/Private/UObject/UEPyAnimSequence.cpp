@@ -65,7 +65,7 @@ PyObject *py_ue_anim_extract_bone_transform(ue_PyUObject * self, PyObject * args
 	if (rast)
 	{
 		FTransform OutAtom;
-		anim->ExtractBoneTransform(rast->raw_anim_sequence_track, OutAtom, frame_time);
+		UE::Anim::ExtractBoneTransform(rast->raw_anim_sequence_track, OutAtom, frame_time);
 
 		return py_ue_new_ftransform(OutAtom);
 	}
@@ -120,7 +120,7 @@ PyObject *py_ue_anim_sequence_update_compressed_track_map_from_raw(ue_PyUObject 
 }
 #endif
 
-
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 2) || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION > 13)
 PyObject *py_ue_anim_sequence_get_raw_animation_data(ue_PyUObject * self, PyObject * args)
 {
 	ue_py_check(self);
@@ -158,6 +158,7 @@ PyObject *py_ue_anim_sequence_get_raw_animation_track(ue_PyUObject * self, PyObj
 
 	return py_ue_new_fraw_anim_sequence_track(anim_seq->GetRawAnimationTrack(index));
 }
+#endif
 
 PyObject *py_ue_anim_add_key_to_sequence(ue_PyUObject * self, PyObject * args)
 {
@@ -181,7 +182,7 @@ PyObject *py_ue_anim_add_key_to_sequence(ue_PyUObject * self, PyObject * args)
 
 	Py_RETURN_NONE;
 }
-
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 2) || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION > 13)
 PyObject *py_ue_anim_sequence_apply_raw_anim_changes(ue_PyUObject * self, PyObject * args)
 {
 	ue_py_check(self);
@@ -205,7 +206,6 @@ PyObject *py_ue_anim_sequence_apply_raw_anim_changes(ue_PyUObject * self, PyObje
 
 	Py_RETURN_NONE;
 }
-
 
 
 PyObject *py_ue_anim_sequence_add_new_raw_track(ue_PyUObject * self, PyObject * args)
@@ -278,7 +278,7 @@ PyObject *py_ue_anim_sequence_update_raw_track(ue_PyUObject * self, PyObject * a
 
 	Py_RETURN_NONE;
 }
-
+#endif
 
 
 PyObject *py_ue_add_anim_composite_section(ue_PyUObject * self, PyObject * args)
@@ -329,7 +329,7 @@ PyObject *py_ue_get_blend_parameter(ue_PyUObject * self, PyObject * args)
 	if (!PyArg_ParseTuple(args, "i:get_blend_parameter", &index))
 		return nullptr;
 
-	UBlendSpaceBase *blend = ue_py_check_type<UBlendSpaceBase>(self);
+	UBlendSpace*blend = ue_py_check_type<UBlendSpace>(self);
 	if (!blend)
 		return PyErr_Format(PyExc_Exception, "UObject is not a UBlendSpaceBase.");
 
@@ -350,7 +350,7 @@ PyObject *py_ue_set_blend_parameter(ue_PyUObject * self, PyObject * args)
 	if (!PyArg_ParseTuple(args, "iO:get_blend_parameter", &index, &py_blend))
 		return nullptr;
 
-	UBlendSpaceBase *blend = ue_py_check_type<UBlendSpaceBase>(self);
+	UBlendSpace *blend = ue_py_check_type<UBlendSpace>(self);
 	if (!blend)
 		return PyErr_Format(PyExc_Exception, "UObject is not a UBlendSpaceBase.");
 

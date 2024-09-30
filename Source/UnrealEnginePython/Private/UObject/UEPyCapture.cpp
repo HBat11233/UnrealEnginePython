@@ -138,8 +138,8 @@ private:
 
 		if (bIsDeviceValid)
 		{
-			TransientMasterVolume = AudioDevice->GetTransientMasterVolume();
-			AudioDevice->SetTransientMasterVolume(0.0f);
+			TransientMasterVolume = AudioDevice->GetTransientPrimaryVolume();
+			AudioDevice->SetTransientPrimaryVolume(0.0f);
 		}
 
 		// play at the next tick
@@ -363,7 +363,7 @@ private:
 
 		if (bIsDeviceValid)
 		{
-			AudioDevice->SetTransientMasterVolume(TransientMasterVolume);
+			AudioDevice->SetTransientPrimaryVolume(TransientMasterVolume);
 		}
 
 		CurrentCaptureObject->Close();

@@ -10,6 +10,8 @@
 #endif
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION > 18)
 #include "Runtime/Engine/Public/Rendering/SkeletalMeshModel.h"
+#include "SkeletalMeshReductionSettings.h"
+#include "Runtime/Engine/Classes/Engine/SkinnedAssetCommon.h"
 #endif
 #endif
 

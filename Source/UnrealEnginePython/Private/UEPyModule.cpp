@@ -778,14 +778,18 @@ static PyMethodDef ue_PyUObject_methods[] = {
 
 #if WITH_EDITOR
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION > 13)
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 2) || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION > 13)
 	{ "get_raw_animation_data", (PyCFunction)py_ue_anim_sequence_get_raw_animation_data, METH_VARARGS, "" },
 	{ "get_raw_animation_track", (PyCFunction)py_ue_anim_sequence_get_raw_animation_track, METH_VARARGS, "" },
 	{ "add_new_raw_track", (PyCFunction)py_ue_anim_sequence_add_new_raw_track, METH_VARARGS, "" },
+#endif
 #if !(ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 23))
 	{ "update_compressed_track_map_from_raw", (PyCFunction)py_ue_anim_sequence_update_compressed_track_map_from_raw, METH_VARARGS, "" },
 #endif
+#if (ENGINE_MAJOR_VERSION == 5 && ENGINE_MINOR_VERSION < 2) || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION > 13)
 	{ "update_raw_track", (PyCFunction)py_ue_anim_sequence_update_raw_track, METH_VARARGS, "" },
 	{ "apply_raw_anim_changes", (PyCFunction)py_ue_anim_sequence_apply_raw_anim_changes, METH_VARARGS, "" },
+#endif
 	{ "add_key_to_sequence", (PyCFunction)py_ue_anim_add_key_to_sequence, METH_VARARGS, "" },
 #endif
 	{ "add_anim_composite_section", (PyCFunction)py_ue_add_anim_composite_section, METH_VARARGS, "" },
@@ -1950,7 +1954,7 @@ UClass* unreal_engine_new_uclass(char* name, UClass* outer_parent)
 		new_object->ClearFunctionMapsCaches();
 		new_object->PurgeClass(true);
 		new_object->Children = nullptr;
-		new_object->ClassAddReferencedObjects = parent->ClassAddReferencedObjects;
+		new_object->CppClassStaticFunctions = parent->CppClassStaticFunctions;
 		// NOTA BENE we may need to do something with ChildProperties now
 		// as apparently the previous Children list now split into 2 lists
 		// with properties in ChildProperties
@@ -5274,7 +5278,7 @@ UFunction* unreal_engine_add_function(UClass* u_class, char* name, PyObject* py_
 					if (ucp)
 					{
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 25)
-						UE_LOG(LogPython, Warning, TEXT("Parent FClassProperty = %p %s %p %s"), ucp->PropertyClass, *ucp->PropertyClass->GetName(), ucp->MetaClass, *ucp->MetaClass->GetName());
+						UE_LOG(LogPython, Warning, TEXT("Parent FClassProperty = %p %s %p %s"), ucp->PropertyClass->GetDefaultObject(), *ucp->PropertyClass->GetName(), ucp->MetaClass->GetDefaultObject(), *ucp->MetaClass->GetName());
 #else
 						UE_LOG(LogPython, Warning, TEXT("Parent UClassProperty = %p %s %p %s"), ucp->PropertyClass, *ucp->PropertyClass->GetName(), ucp->MetaClass, *ucp->MetaClass->GetName());
 #endif
@@ -5306,7 +5310,7 @@ UFunction* unreal_engine_add_function(UClass* u_class, char* name, PyObject* py_
 					if (ucp)
 					{
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 25)
-						UE_LOG(LogPython, Warning, TEXT("Function FClassProperty = %p %s %p %s"), ucp->PropertyClass, *ucp->PropertyClass->GetName(), ucp->MetaClass, *ucp->MetaClass->GetName());
+						UE_LOG(LogPython, Warning, TEXT("Function FClassProperty = %p %s %p %s"), ucp->PropertyClass->GetDefaultObject(), *ucp->PropertyClass->GetName(), ucp->MetaClass->GetDefaultObject(), *ucp->MetaClass->GetName());
 #else
 						UE_LOG(LogPython, Warning, TEXT("Function UClassProperty = %p %s %p %s"), ucp->PropertyClass, *ucp->PropertyClass->GetName(), ucp->MetaClass, *ucp->MetaClass->GetName());
 #endif

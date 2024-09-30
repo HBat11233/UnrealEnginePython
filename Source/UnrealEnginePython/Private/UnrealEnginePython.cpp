@@ -25,6 +25,8 @@
 #include "Runtime/Core/Public/Mac/CocoaThread.h"
 #endif
 
+#include <clocale>
+
 void unreal_engine_init_py_module();
 void init_unreal_engine_builtin();
 

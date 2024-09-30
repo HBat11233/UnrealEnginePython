@@ -203,8 +203,8 @@ static PyObject *py_ue_fpaint_context_draw_lines(ue_PyFPaintContext *self, PyObj
 	{
 		if (!PyTuple_Check(py_item))
 		{
-			return PyErr_Format(PyExc_Exception, "iterable item is not a tuple");
 			Py_DECREF(py_iter);
+			return PyErr_Format(PyExc_Exception, "iterable item is not a tuple");
 		}
 
 		float x, y;
