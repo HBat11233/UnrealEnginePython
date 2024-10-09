@@ -493,17 +493,33 @@ bool SPythonLog::CreateLogMessages(const TCHAR* V, ELogVerbosity::Type Verbosity
 	}
 }
 
-void SPythonLog::Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category)
+void SPythonLog::Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("%s"), Category.ToString())
-	if (MessagesTextMarshaller->AppendMessage(V, Verbosity, Category))
+	while (!VQueue.IsEmpty())
 	{
-		// Don't scroll to the bottom automatically when the user is scrolling the view or has scrolled it away from the bottom.
-		if (!bIsUserScrolled)
+		const TCHAR* V;
+		ELogVerbosity::Type Verbosity;
+		FName Category;
+		VQueue.Dequeue(V);
+		VerbosityQueue.Dequeue(Verbosity);
+		CategoryQueue.Dequeue(Category);
+		//UE_LOG(LogTemp, Warning, TEXT("%s"), Category.ToString())
+		if (MessagesTextMarshaller->AppendMessage(V, Verbosity, Category))
 		{
-			MessagesTextBox->ScrollTo(FTextLocation(MessagesTextMarshaller->GetNumMessages() - 1));
+			// Don't scroll to the bottom automatically when the user is scrolling the view or has scrolled it away from the bottom.
+			if (!bIsUserScrolled)
+			{
+				MessagesTextBox->ScrollTo(FTextLocation(MessagesTextMarshaller->GetNumMessages() - 1));
+			}
 		}
 	}
+}
+
+void SPythonLog::Serialize(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category)
+{
+	VQueue.Enqueue(V);
+	VerbosityQueue.Enqueue(Verbosity);
+	CategoryQueue.Enqueue(Category);
 }
 
 void SPythonLog::ExtendTextBoxMenu(FMenuBuilder& Builder)

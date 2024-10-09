@@ -132,6 +132,14 @@ public:
 	 */
 	static bool CreateLogMessages(const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category, TArray< TSharedPtr<FLogMessage> >& OutMessages);
 
+	/** SWidget interface */
+	virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
+
+private:
+	TQueue<const TCHAR*> VQueue;
+	TQueue<ELogVerbosity::Type> VerbosityQueue;
+	TQueue<FName> CategoryQueue;
+
 protected:
 
 	virtual void Serialize( const TCHAR* V, ELogVerbosity::Type Verbosity, const class FName& Category ) override;
